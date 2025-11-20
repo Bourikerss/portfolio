@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio | Maxance Genestine</title>
+    <style>
+        /* --- 1. VARIABLES & ESTHÉTIQUE GLOBALE --- */
+        :root {
+            --bg-body: #0f172a;       /* Bleu nuit profond */
+            --bg-card: #1e293b;       /* Gris bleuté (Cartes) */
+            --text-main: #f1f5f9;     /* Blanc cassé (Texte principal) */
+            --text-muted: #94a3b8;    /* Gris clair (Texte secondaire) */
+            --accent: #38bdf8;        /* Bleu Ciel (Couleur d'accentuation) */
+            --accent-hover: #0ea5e9;  /* Bleu un peu plus foncé au survol */
+            --border: #334155;        /* Bordures subtiles */
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- 2. NAVIGATION (HEADER) --- */
+        header {
+            position: fixed;
+            top: 0; width: 100%;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+            padding: 0 5%;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+            text-decoration: none;
+        }
+        .logo span { color: var(--accent); }
+
+        .nav-links { display: flex; gap: 30px; }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-btn:hover, .nav-btn.active { color: var(--accent); }
+        
+        .nav-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -24px; left: 0;
+            width: 100%; height: 3px;
+            background: var(--accent);
+            border-radius: 3px 3px 0 0;
+        }
+
+        /* --- 3. STRUCTURE PRINCIPALE --- */
+        main {
+            padding-top: 100px;
+            padding-bottom: 50px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            display: none;
+            animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .container.active { display: block; }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1, h2, h3, h4 { color: var(--text-main); margin-bottom: 0.5rem; }
+        h2 { 
+            font-size: 1.8rem; 
+            padding-bottom: 10px; 
+            border-bottom: 1px solid var(--border); 
+            margin-bottom: 25px; 
+            color: var(--accent); 
+        }
+        p { color: var(--text-muted); margin-bottom: 1rem; }
+
+        /* Boutons d'action */
+        .cta-btn {
+            display: inline-block;
+            padding: 10px 25px;
+            background-color: var(--accent);
+            color: #0f172a;
+            font-weight: 600;
+            border-radius: 6px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+        .cta-btn:hover { background-color: var(--accent-hover); transform: translateY(-2px); }
+
+        /* --- 4. PAGE ACCUEIL / CV --- */
+        .intro-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 20px;
+        }
+
+        .profile-pic-wrapper {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            border: 4px solid var(--bg-card);
+            box-shadow: 0 0 0 4px var(--accent);
+            margin-bottom: 25px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--bg-card);
+        }
+
+        .profile-pic {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-pic-placeholder {
+            color: var(--text-muted);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .profile-info h1 { font-size: 2.5rem; line-height: 1.2; margin-bottom: 10px;}
+        .profile-info h3 { color: var(--accent); font-weight: 400; font-size: 1.3rem; margin-bottom: 20px; }
+        .profile-info p { max-width: 700px; margin: 0 auto 25px auto; }
+        
+        /* Mise en page du CV */
+        .cv-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+            text-align: left;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 20px;
+            border-left: 2px solid var(--border);
+            margin-bottom: 30px;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -6px; top: 5px;
+            width: 10px; height: 10px;
+            background: var(--accent);
+            border-radius: 50%;
+        }
+        .date { font-size: 0.85rem; color: var(--text-muted); font-family: monospace; display: block; margin-bottom: 5px; }
+
+        .skill-pill {
+            display: inline-block;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.85rem;
+            margin: 0 5px 5px 0;
+            color: var(--text-main);
+        }
+
+        /* --- 5. GRILLES & CARTES --- */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 25px;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+            cursor: pointer;
+        }
+        .card:hover { transform: translateY(-5px); border-color: var(--accent); }
+        
+        .tags { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; }
+        .tag { background: rgba(56, 189, 248, 0.1); color: var(--accent); padding: 5px 12px; border-radius: 20px; font-size: 0.85rem; }
+
+        /* --- 6. MODALES --- */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px);
+            z-index: 2000; justify-content: center; align-items: center; padding: 20px;
+        }
+        .modal-content {
+            background: var(--bg-card); width: 100%; max-width: 700px;
+            border-radius: 12px; border: 1px solid var(--border); padding: 30px;
+            position: relative; animation: zoomIn 0.3s ease; max-height: 90vh; overflow-y: auto;
+        }
+        @keyframes zoomIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        .close-modal {
+            position: absolute; top: 15px; right: 20px; background: none; border: none;
+            color: var(--text-muted); font-size: 2rem; cursor: pointer;
+        }
+        .close-modal:hover { color: var(--accent); }
+
+        .modal-img {
+            width: 100%; height: 250px; object-fit: cover; border-radius: 8px;
+            margin-bottom: 20px; border: 1px solid var(--border); background-color: #000;
+        }
+
+        .modal-tech-list { list-style: none; display: flex; gap: 15px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 15px; flex-wrap: wrap; }
+        .modal-tech-list li { font-weight: bold; color: var(--accent); }
+
+        /* --- 7. FORMULAIRE --- */
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; color: var(--text-main); }
+        input, textarea {
+            width: 100%; padding: 12px; background: var(--bg-body);
+            border: 1px solid var(--border); border-radius: 8px; color: var(--text-main); font-family: inherit;
+        }
+        input:focus, textarea:focus { outline: none; border-color: var(--accent); }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .cv-layout { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav>
+            <a href="#" class="logo" onclick="showPage('home')">Maxance Genestine<span>.</span></a>
+            <div class="nav-links">
+                <button class="nav-btn active" onclick="showPage('home')">Profil (CV)</button>
+                <button class="nav-btn" onclick="showPage('competences')">Compétences</button>
+                <button class="nav-btn" onclick="showPage('projets')">Projets</button>
+                <button class="nav-btn" onclick="showPage('contact')">Contact</button>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div id="home" class="container active">
+            
+            <div class="intro-section">
+                <div class="profile-pic-wrapper">
+                    <img src="Photo.png.webp" alt="Maxance Genestine" class="profile-pic" id="myProfilePic" onerror="this.style.display='none'; document.getElementById('placeholder').style.display='block';">
+                    <span id="placeholder" class="profile-pic-placeholder" style="display:none;">Photo</span>
+                </div>
+                
+                <div class="profile-info">
+                    <h1>Maxance Genestine</h1>
+                    <h3>Étudiant R&T Option Cybersécurité</h3>
+                    <p>
+                        Actuellement en alternance chez <strong>Orange</strong> et étudiant en 2ème année à l'IUT de Blois.
+                        Passionné par les réseaux, je suis sérieux, rigoureux et sociable. Je souhaite poursuivre mes études en <strong>Master Réseaux</strong>.
+                    </p>
+                    <div style="margin-top: 15px;">
+                        <button class="cta-btn" onclick="showPage('contact')">Me contacter</button>
+                        <a href="CV.pdf" download="CV_Maxance_Genestine.pdf" class="cta-btn" style="background: transparent; border: 1px solid var(--border); color: var(--text-main); margin-left: 10px; text-decoration: none;">
+                            Télécharger mon CV
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cv-layout">
+                <div class="left-col">
+                    <h2>Expériences Professionnelles</h2>
+                    <div class="timeline-item">
+                        <h4>Apprenti Technicien GPE</h4>
+                        <span class="date">2023 - Présent (2 ans) | Orange</span>
+                        <p>Technicien Grand Public et Entreprises. Maintenance des réseaux, intervention chez les clients et déploiement de solutions télécoms. Alternance sur 2 ans.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Auxiliaire de Vacances (Back Office)</h4>
+                        <span class="date">2025 (1 mois) | Crédit Agricole Titres</span>
+                        <p>Gestion administrative et archivage. Création et paramétrage de comptes bancaires de type PEA (Plan d'Épargne en Actions).</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Auxiliaire de Vacances (Back Office)</h4>
+                        <span class="date">2024 (1 mois) | Crédit Agricole Titres</span>
+                        <p>Archivage et gestion du cycle de vie des produits financiers : gestion des actions de type "Warrant" de leur création à leur échéance.</p>
+                    </div>
+
+                    <h2 style="margin-top: 40px;">Formation</h2>
+                    <div class="timeline-item">
+                        <h4>BUT Réseaux & Télécommunications</h4>
+                        <span class="date">2023 - Présent | IUT de Blois</span>
+                        <p>2ème année. Option Cybersécurité. Administration réseau, sécurité des SI, programmation et télécommunications.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Baccalauréat Général</h4>
+                        <span class="date">2024 | Lycée Vaucanson (Tours)</span>
+                        <p><strong>Mention Assez Bien</strong>. Spécialités Mathématiques et Physique-Chimie (SES suivie jusqu'en Première).</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Brevet des Collèges</h4>
+                        <span class="date">2021 | Collège La Béchellerie (Saint-Cyr-sur-Loire)</span>
+                        <p><strong>Mention Bien</strong>.</p>
+                    </div>
+                </div>
+
+                <div class="right-col">
+                    <h2>Compétences</h2>
+                    <h4 style="margin-top: 20px;">Savoir-être (Soft Skills)</h4>
+                    <div style="margin-bottom: 20px;">
+                        <span class="skill-pill">Sérieux</span>
+                        <span class="skill-pill">Rigoureux</span>
+                        <span class="skill-pill">Sociable</span>
+                        <span class="skill-pill">Adaptabilité</span>
+                    </div>
+                    <h4>Programmation</h4>
+                    <div style="margin-bottom: 20px;">
+                        <span class="skill-pill">Python</span>
+                        <span class="skill-pill">HTML / CSS</span>
+                        <span class="skill-pill">SQL</span>
+                        <span class="skill-pill">PHP</span>
+                        <span class="skill-pill">Java</span>
+                    </div>
+                    <h4>Réseaux</h4>
+                    <div style="margin-bottom: 20px;">
+                        <span class="skill-pill">Administration Réseau</span>
+                        <span class="skill-pill">Cybersécurité</span>
+                    </div>
+                    <h4>Objectif</h4>
+                    <p style="font-size: 0.9rem; color: var(--text-muted);">Poursuite d'études en Master spécialisé Réseaux.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="competences" class="container">
+            <h2>Compétences Techniques</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>Développement Web & Scripting</h3>
+                    <p>Création d'outils et interfaces.</p>
+                    <div class="tags"><span class="tag">HTML/CSS</span><span class="tag">PHP</span><span class="tag">Python</span><span class="tag">Java</span></div>
+                </div>
+                <div class="card">
+                    <h3>Administration & Données</h3>
+                    <p>Gestion de systèmes et bases de données.</p>
+                    <div class="tags"><span class="tag">SQL</span><span class="tag">Linux</span><span class="tag">Administration Réseau</span></div>
+                </div>
+                <div class="card">
+                    <h3>Cybersécurité</h3>
+                    <p>Sécurisation et analyse.</p>
+                    <div class="tags"><span class="tag">SecOps</span><span class="tag">Analyse de vulnérabilités</span><span class="tag">Réseaux sécurisés</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="projets" class="container">
+            <h2>Projets Réalisés</h2>
+            <p style="margin-bottom: 20px;">Cliquez sur une carte pour voir les détails.</p>
+            <div class="grid">
+                <div class="card" onclick="openModal('modal-1')">
+                    <h3>Infrastructure HA</h3>
+                    <p>Cluster Web avec Load Balancing.</p>
+                    <div class="tags"><span class="tag">HAProxy</span><span class="tag">Linux</span></div>
+                </div>
+                <div class="card" onclick="openModal('modal-2')">
+                    <h3>Audit de Sécurité Web</h3>
+                    <p>Pentest sur application vulnérable.</p>
+                    <div class="tags"><span class="tag">Burp Suite</span><span class="tag">SQL Injection</span></div>
+                </div>
+                <div class="card" onclick="openModal('modal-3')">
+                    <h3>Architecture Réseau</h3>
+                    <p>Segmentation et sécurisation.</p>
+                    <div class="tags"><span class="tag">Cisco</span><span class="tag">VLANs</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="contact" class="container">
+            <h2>Me Contacter</h2>
+            <div class="grid" style="grid-template-columns: 1fr 1fr;">
+                <div>
+                    <p>Je suis disponible pour échanger sur mon parcours, mes compétences ou des opportunités futures.</p>
+                    <p><strong>Email :</strong> maxance.genestine@gmail.com</p>
+                    <p><strong>LinkedIn :</strong> linkedin.com/in/maxance-genestine</p>
+                </div>
+                
+                <form id="contactForm" action="https://formspree.io/f/xjklpzwv" method="POST">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" name="email" placeholder="votre@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Message</label>
+                        <textarea name="message" rows="4" placeholder="Bonjour..." required></textarea>
+                    </div>
+                    <button type="submit" class="cta-btn" style="width: 100%;">Envoyer</button>
+                </form>
+                
+            </div>
+        </div>
+    </main>
+
+    <div id="modal-1" class="modal-overlay" onclick="closeModal(event, 'modal-1')">
+        <div class="modal-content">
+            <button class="close-modal" onclick="forceClose('modal-1')">&times;</button>
+            <h2>Infrastructure Haute Disponibilité</h2>
+            <img src="projet1.jpg" alt="Projet 1" class="modal-img" onerror="this.style.display='none'">
+            <ul class="modal-tech-list"><li>Linux</li><li>HAProxy</li><li>Keepalived</li></ul>
+            <p>Mise en place d'une redondance serveur web pour assurer la continuité de service.</p>
+        </div>
+    </div>
+    <div id="modal-2" class="modal-overlay" onclick="closeModal(event, 'modal-2')">
+        <div class="modal-content">
+            <button class="close-modal" onclick="forceClose('modal-2')">&times;</button>
+            <h2>Audit Web</h2>
+            <img src="projet2.jpg" alt="Projet 2" class="modal-img" onerror="this.style.display='none'">
+            <ul class="modal-tech-list"><li>Kali</li><li>Burp</li></ul>
+            <p>Exploitation de failles SQL et XSS sur DVWA et rapport de correction.</p>
+        </div>
+    </div>
+    <div id="modal-3" class="modal-overlay" onclick="closeModal(event, 'modal-3')">
+        <div class="modal-content">
+            <button class="close-modal" onclick="forceClose('modal-3')">&times;</button>
+            <h2>Réseau & Sécurité</h2>
+            <img src="projet3.jpg" alt="Projet 3" class="modal-img" onerror="this.style.display='none'">
+            <ul class="modal-tech-list"><li>Cisco</li><li>VPN</li></ul>
+            <p>Configuration complète d'un réseau multi-sites sécurisé.</p>
+        </div>
+    </div>
+
+    <script>
+        // 1. Navigation
+        function showPage(pageId) {
+            document.querySelectorAll('.container').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            const btn = document.querySelector(`.nav-btn[onclick="showPage('${pageId}')"]`);
+            if(btn) btn.classList.add('active');
+            window.scrollTo(0,0);
+        }
+
+        // 2. Modales
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; document.body.style.overflow = 'hidden'; }
+        function closeModal(e, id) { if(e.target.id === id) forceClose(id); }
+        function forceClose(id) { document.getElementById(id).style.display = 'none'; document.body.style.overflow = 'auto'; }
+
+        // 3. Gestion du Formulaire via Formspree (AJAX)
+        var form = document.getElementById("contactForm");
+
+        async function handleSubmit(event) {
+            event.preventDefault();
+            var data = new FormData(event.target);
+            fetch(event.target.action, {
+                method: form.method,
+                body: data,
+                headers: { 'Accept': 'application/json' }
+            }).then(response => {
+                if (response.ok) {
+                    alert("Merci ! Votre message a bien été envoyé à Maxance.");
+                    form.reset();
+                } else {
+                    response.json().then(data => {
+                        if (Object.hasOwn(data, 'errors')) {
+                            alert(data["errors"].map(error => error["message"]).join(", "));
+                        } else {
+                            alert("Oups ! Il y a eu un problème lors de l'envoi.");
+                        }
+                    })
+                }
+            }).catch(error => {
+                alert("Oups ! Il y a eu un problème lors de l'envoi.");
+            });
+        }
+        form.addEventListener("submit", handleSubmit);
+    </script>
+</body>
+</html>
